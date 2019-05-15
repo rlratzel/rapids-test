@@ -1,0 +1,46 @@
+# Copyright (c) 2019, NVIDIA CORPORATION.
+
+{% set version = environ.get('GIT_DESCRIBE_TAG', '0.0.0.dev').lstrip('v') %}
+{% set git_revision_count=environ.get('GIT_DESCRIBE_NUMBER', 0) %}
+{% set py_version=environ.get('CONDA_PY', 35) %}
+package:
+  name: rapids-test
+  version: {{ version }}
+
+source:
+  path: ../../..
+
+build:
+  number: {{ git_revision_count }}
+  string: py{{ py_version }}_{{ git_revision_count }}
+
+requirements:
+  build:
+    - python=3.7
+    - setuptools
+  run:
+    - python=3.7
+    - cudatoolkit=10.0
+    - dask-cuda=0.7.*
+    - cudf=0.7.*
+    - dask-cudf=0.7.*
+    - cuml=0.7.*
+    - dask-cuml=0.7.*
+    - cugraph=0.7.*
+    - rapidsai/label/xgboost::xgboost=0.83.*
+    - rapidsai/label/xgboost::dask-xgboost=0.2.*
+    - cython
+    - dask
+    - distributed
+    - gcsfs
+
+test:
+  imports:
+    - rapids_test
+
+about:
+  home: http://rapids.ai/
+  license: Apache-2.0
+  license_family: Apache
+  license_file: LICENSE
+  summary: RAPIDS diagnostic tests
