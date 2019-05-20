@@ -24,5 +24,5 @@ def test_multicolumn_groupby():
 
     assert len(expectedValues) == len(cudfSeries)
 
-    for (actual, expected) in zip(expectedValues, cudfSeries) :
+    for (actual, expected) in zip(cudfSeries, expectedValues) :
         assert actual == pytest.approx(expected)

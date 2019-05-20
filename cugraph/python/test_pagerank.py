@@ -88,7 +88,7 @@ def test_pagerank() :
     gdf = read_csv_file(csvFile)
     sources = gdf['0']
     destinations = gdf['1']
-    
+
     # Assuming that data has been loaded into a cuDF (using read_csv) Dataframe
     # create a Graph using the source and destination vertex pairs
     G = cugraph.Graph()
@@ -98,5 +98,5 @@ def test_pagerank() :
     gdf_page = cugraph.pagerank(G)
 
     assert len(expectedPageRanks) == len(gdf_page["pagerank"])
-    for (actual, expected) in zip(expectedPageRanks, gdf_page["pagerank"]):
+    for (actual, expected) in zip(gdf_page["pagerank"], expectedPageRanks):
         assert actual == pytest.approx(expected)

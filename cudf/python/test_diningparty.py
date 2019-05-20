@@ -26,7 +26,6 @@ def test_diningparty() :
     ]
 
     assert len(expectedValues) == len(cudfSeries)
-    
-    for (actual, expected) in zip(expectedValues, cudfSeries) :
-        assert actual == pytest.approx(expected)
 
+    for (actual, expected) in zip(cudfSeries, expectedValues) :
+        assert actual == pytest.approx(expected)
