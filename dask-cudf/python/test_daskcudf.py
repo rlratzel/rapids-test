@@ -7,7 +7,7 @@ def test_cluster():
     cluster = LocalCUDACluster()
     client = Client(cluster)
     # this assumes running on a machine with more than one GPU
-    assert len(client.scheduler_info()['workers']) > 1
+    assert len(client.scheduler_info()['workers']) >= 1
 
 def test_multicolumn_groupby():
     import cudf, dask_cudf
