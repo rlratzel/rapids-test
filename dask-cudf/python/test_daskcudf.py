@@ -14,7 +14,7 @@ except Exception as e:
 
 
 @pytest.mark.skipif(__numGPUs <= 1,
-                    reason="requires >1 GPUs, detected %s" % __numGPUSkipReason)
+                    reason="requires >1 GPUs, detected %s %s" % (__numGPUs, __numGPUSkipReason))
 def test_cluster():
     from dask_cuda import LocalCUDACluster
     from dask.distributed import Client
