@@ -1,5 +1,20 @@
 import pytest
+import subprocess
 
+from cudf.tests.utils import assert_eq
+
+__numGPUSkipReason = ""
+
+try:
+    __numGPUs = int(subprocess.check_output("nvidia-smi --list-gpus|wc -l",
+                                            shell=True))
+except Exception as e:
+    __numGPUs = 0
+    __numGPUSkipReason = str(e)
+
+
+@pytest.mark.skipif(__numGPUs <= 1,
+                    reason="requires >1 GPUs, detected %s" % __numGPUSkipReason)
 def test_cluster():
     from dask_cuda import LocalCUDACluster
     from dask.distributed import Client
@@ -18,11 +33,12 @@ def test_multicolumn_groupby():
     tmp_df['val2'] = [9, 9, 9, 9, 9, 9]
 
     ddf = dask_cudf.from_cudf(tmp_df, npartitions=2)
-    cudfSeries = ddf.groupby(['id', 'val1']).count().compute()
 
-    expectedValues = [1, 1, 1, 1, 1, 1]
+    actual = ddf.groupby(['id', 'val1']).count().compute()
 
-    assert len(expectedValues) == len(cudfSeries)
+    # FIXME: this is not idiomatic cudf!
+    expectedVals = [1, 1, 1, 1, 1, 1]
+    expected = cudf.DataFrame()
+    expected['val'] = expectedVals
 
-    for (actual, expected) in zip(cudfSeries, expectedValues) :
-        assert actual == pytest.approx(expected)
+    assert False not in (expected.to_pandas().values == actual.to_pandas().values)
